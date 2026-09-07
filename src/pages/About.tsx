@@ -161,6 +161,7 @@ const defaultData = {
 
 const About = () => {
   const [currentIndex, setCurrentIndex] = useState(0);
+  const [visibleItems, setVisibleItems] = useState(3);
   const { data: rawData } = useMtscnlAboutPageLive();
   const data = rawData ? { ...defaultData, ...rawData } : defaultData;
 
