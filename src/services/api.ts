@@ -19,21 +19,12 @@ export function populateMediaCache(data) {
   }
 }
 
-const fetchOptions: RequestInit = {
-  cache: 'no-store',
-  headers: {
-    'Cache-Control': 'no-cache, no-store, must-revalidate',
-    'Pragma': 'no-cache',
-    'Expires': '0',
-  },
-};
-
 /**
  * Fetch MTSC NL HomePage Global data from Payload CMS (with timestamp to bust browser cache cleanly)
  */
 export async function getMtscnlHomePageData() {
   try {
-    const res = await fetch(`${CMS_URL}/api/globals/mtscnl-home-page?depth=2&_t=${Date.now()}`, fetchOptions);
+    const res = await fetch(`${CMS_URL}/api/globals/mtscnl-home-page?depth=2&_t=${Date.now()}`);
     if (!res.ok) {
       throw new Error(`Failed to fetch home page data: ${res.statusText}`);
     }
@@ -51,7 +42,7 @@ export async function getMtscnlHomePageData() {
  */
 export async function getMtscnlContactPageData() {
   try {
-    const res = await fetch(`${CMS_URL}/api/globals/mtscnl-contact-page?depth=2&_t=${Date.now()}`, fetchOptions);
+    const res = await fetch(`${CMS_URL}/api/globals/mtscnl-contact-page?depth=2&_t=${Date.now()}`);
     if (!res.ok) {
       throw new Error(`Failed to fetch contact page data: ${res.statusText}`);
     }
@@ -69,7 +60,7 @@ export async function getMtscnlContactPageData() {
  */
 export async function getMtscnlAboutPageData() {
   try {
-    const res = await fetch(`${CMS_URL}/api/globals/mtscnl-about-page?depth=2&_t=${Date.now()}`, fetchOptions);
+    const res = await fetch(`${CMS_URL}/api/globals/mtscnl-about-page?depth=2&_t=${Date.now()}`);
     if (!res.ok) {
       throw new Error(`Failed to fetch about page data: ${res.statusText}`);
     }
@@ -87,7 +78,7 @@ export async function getMtscnlAboutPageData() {
  */
 export async function getMtscnlSupportPageData() {
   try {
-    const res = await fetch(`${CMS_URL}/api/globals/mtscnl-support-page?depth=2&_t=${Date.now()}`, fetchOptions);
+    const res = await fetch(`${CMS_URL}/api/globals/mtscnl-support-page?depth=2&_t=${Date.now()}`);
     if (!res.ok) {
       throw new Error(`Failed to fetch support page data: ${res.statusText}`);
     }
@@ -105,7 +96,7 @@ export async function getMtscnlSupportPageData() {
  */
 export async function getMtscnlGetInvolvedPageData() {
   try {
-    const res = await fetch(`${CMS_URL}/api/globals/mtscnl-get-involved-page?depth=2&_t=${Date.now()}`, fetchOptions);
+    const res = await fetch(`${CMS_URL}/api/globals/mtscnl-get-involved-page?depth=2&_t=${Date.now()}`);
     if (!res.ok) {
       throw new Error(`Failed to fetch get-involved page data: ${res.statusText}`);
     }
