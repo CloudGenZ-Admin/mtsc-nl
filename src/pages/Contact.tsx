@@ -1,5 +1,6 @@
 import React, { useState, useRef, useEffect } from "react";
 import { Button } from "@/components/ui/button";
+import { useMtscnlContactPageLive } from "@/hooks/usePayloadLive";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
@@ -42,26 +43,9 @@ const defaultData = {
 
 const Contact = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [pageData, setPageData] = useState<any>(null);
+  const { data: rawData } = useMtscnlContactPageLive();
+  const data = rawData ? { ...defaultData, ...rawData } : defaultData;
   const formRef = useRef<HTMLFormElement>(null);
-
-  useEffect(() => {
-    const fetchPageData = async () => {
-      try {
-        const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:3000';
-        const res = await fetch(`${apiUrl}/api/globals/mtscnl-contact-page`);
-        if (res.ok) {
-          const data = await res.json();
-          setPageData(data);
-        }
-      } catch (error) {
-        console.error("Error fetching Mtscnl Contact Page data:", error);
-      }
-    };
-    fetchPageData();
-  }, []);
-
-  const data = pageData ? { ...defaultData, ...pageData } : defaultData;
 
   // This handles the iframe finishing its load (meaning Google received the data)
   const handleIframeLoad = () => {

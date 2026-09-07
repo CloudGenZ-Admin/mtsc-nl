@@ -1,4 +1,4 @@
-const CMS_URL = import.meta.env.VITE_API_URL || import.meta.env.VITE_CMS_URL || 'http://localhost:4000';
+export const CMS_URL = (import.meta.env.VITE_API_URL || import.meta.env.VITE_CMS_URL || 'https://mtsc-nl-cms.cloudgenz.com').replace(/\/+$/, '');
 
 // Global in-memory cache map for populated media objects
 const mediaCacheMap = new Map();
@@ -19,12 +19,21 @@ export function populateMediaCache(data) {
   }
 }
 
+const fetchOptions: RequestInit = {
+  cache: 'no-store',
+  headers: {
+    'Cache-Control': 'no-cache, no-store, must-revalidate',
+    'Pragma': 'no-cache',
+    'Expires': '0',
+  },
+};
+
 /**
  * Fetch MTSC NL HomePage Global data from Payload CMS (with timestamp to bust browser cache cleanly)
  */
 export async function getMtscnlHomePageData() {
   try {
-    const res = await fetch(`${CMS_URL}/api/globals/mtscnl-home-page?depth=2&_t=${Date.now()}`);
+    const res = await fetch(`${CMS_URL}/api/globals/mtscnl-home-page?depth=2&_t=${Date.now()}`, fetchOptions);
     if (!res.ok) {
       throw new Error(`Failed to fetch home page data: ${res.statusText}`);
     }
@@ -42,7 +51,7 @@ export async function getMtscnlHomePageData() {
  */
 export async function getMtscnlContactPageData() {
   try {
-    const res = await fetch(`${CMS_URL}/api/globals/mtscnl-contact-page?depth=2&_t=${Date.now()}`);
+    const res = await fetch(`${CMS_URL}/api/globals/mtscnl-contact-page?depth=2&_t=${Date.now()}`, fetchOptions);
     if (!res.ok) {
       throw new Error(`Failed to fetch contact page data: ${res.statusText}`);
     }
@@ -60,7 +69,7 @@ export async function getMtscnlContactPageData() {
  */
 export async function getMtscnlAboutPageData() {
   try {
-    const res = await fetch(`${CMS_URL}/api/globals/mtscnl-about-page?depth=2&_t=${Date.now()}`);
+    const res = await fetch(`${CMS_URL}/api/globals/mtscnl-about-page?depth=2&_t=${Date.now()}`, fetchOptions);
     if (!res.ok) {
       throw new Error(`Failed to fetch about page data: ${res.statusText}`);
     }
@@ -69,6 +78,42 @@ export async function getMtscnlAboutPageData() {
     return data;
   } catch (error) {
     console.error('Error fetching Mtscnl AboutPage data from Payload CMS:', error);
+    return null;
+  }
+}
+
+/**
+ * Fetch MTSC NL SupportPage Global data from Payload CMS
+ */
+export async function getMtscnlSupportPageData() {
+  try {
+    const res = await fetch(`${CMS_URL}/api/globals/mtscnl-support-page?depth=2&_t=${Date.now()}`, fetchOptions);
+    if (!res.ok) {
+      throw new Error(`Failed to fetch support page data: ${res.statusText}`);
+    }
+    const data = await res.json();
+    populateMediaCache(data);
+    return data;
+  } catch (error) {
+    console.error('Error fetching Mtscnl SupportPage data from Payload CMS:', error);
+    return null;
+  }
+}
+
+/**
+ * Fetch MTSC NL GetInvolvedPage Global data from Payload CMS
+ */
+export async function getMtscnlGetInvolvedPageData() {
+  try {
+    const res = await fetch(`${CMS_URL}/api/globals/mtscnl-get-involved-page?depth=2&_t=${Date.now()}`, fetchOptions);
+    if (!res.ok) {
+      throw new Error(`Failed to fetch get-involved page data: ${res.statusText}`);
+    }
+    const data = await res.json();
+    populateMediaCache(data);
+    return data;
+  } catch (error) {
+    console.error('Error fetching Mtscnl GetInvolvedPage data from Payload CMS:', error);
     return null;
   }
 }

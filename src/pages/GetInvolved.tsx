@@ -1,5 +1,6 @@
 import { useState, useRef, useEffect } from "react";
 import { Link } from "react-router-dom";
+import { useMtscnlGetInvolvedPageLive } from "@/hooks/usePayloadLive";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -395,26 +396,9 @@ const defaultData = {
 const GetInvolved = () => {
   const [activeForm, setActiveForm] = useState<string | null>(null);
   const [isDonateActive, setIsDonateActive] = useState(false);
-  const [pageData, setPageData] = useState<any>(null);
+  const { data: rawData } = useMtscnlGetInvolvedPageLive();
+  const data = rawData ? { ...defaultData, ...rawData } : defaultData;
   const formContainerRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    const fetchPageData = async () => {
-      try {
-        const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:3000';
-        const res = await fetch(`${apiUrl}/api/globals/mtscnl-get-involved-page`);
-        if (res.ok) {
-          const data = await res.json();
-          setPageData(data);
-        }
-      } catch (error) {
-        console.error("Error fetching Mtscnl Get Involved Page data:", error);
-      }
-    };
-    fetchPageData();
-  }, []);
-
-  const data = pageData ? { ...defaultData, ...pageData } : defaultData;
 
   // Rebuild the Action Cards dynamically using the CMS data but mapping exactly to the local IDs and Icons
   const actionCards = [

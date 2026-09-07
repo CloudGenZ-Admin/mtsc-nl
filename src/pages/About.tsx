@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
+import { useMtscnlAboutPageLive } from "@/hooks/usePayloadLive";
 import { 
   Users, 
   HeartPulse, 
@@ -160,8 +161,8 @@ const defaultData = {
 
 const About = () => {
   const [currentIndex, setCurrentIndex] = useState(0);
-  const [visibleItems, setVisibleItems] = useState(1);
-  const [pageData, setPageData] = useState<any>(null);
+  const { data: rawData } = useMtscnlAboutPageLive();
+  const data = rawData ? { ...defaultData, ...rawData } : defaultData;
 
   useEffect(() => {
     const handleResize = () => {
@@ -180,24 +181,6 @@ const About = () => {
     window.addEventListener("resize", handleResize);
     return () => window.removeEventListener("resize", handleResize);
   }, []);
-
-  useEffect(() => {
-    const fetchPageData = async () => {
-      try {
-        const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:3000';
-        const res = await fetch(`${apiUrl}/api/globals/mtscnl-about-page`);
-        if (res.ok) {
-          const data = await res.json();
-          setPageData(data);
-        }
-      } catch (error) {
-        console.error("Error fetching Mtscnl About Page data:", error);
-      }
-    };
-    fetchPageData();
-  }, []);
-
-  const data = pageData ? { ...defaultData, ...pageData } : defaultData;
 
   const maxIndex = Math.max(0, newPhotos.length - visibleItems);
   const nextSlide = () => setCurrentIndex((prev) => (prev >= maxIndex ? 0 : prev + 1));

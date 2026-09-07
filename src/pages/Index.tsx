@@ -12,8 +12,7 @@ import {
   MapPin, Building2, Gift, HeartHandshake, Briefcase, 
   Sparkles, Scale, Package, Wifi, Coffee
 } from "lucide-react";
-import { useLivePreview } from "@payloadcms/live-preview-react";
-import { getMtscnlHomePageData } from "@/services/api"; // API service imported
+import { useMtscnlHomePageLive } from "@/hooks/usePayloadLive";
 
 // Image imports for the Hero Section
 import heroImg3 from "@/assets/pocket2.jpeg";
@@ -148,28 +147,8 @@ const defaultData = {
 
 const Index = () => {
   const [isDonateOpen, setIsDonateOpen] = useState(false);
-  const [initialData, setInitialData] = useState<any>(defaultData);
-  
-  // Set proper API URL taking variables into account (fallback to 4000)
-  const apiUrl = import.meta.env.VITE_API_URL || import.meta.env.VITE_CMS_URL || 'http://localhost:4000';
-
-  useEffect(() => {
-    const fetchPageData = async () => {
-      // Clean function call - no old fetch logic
-      const fetchedData = await getMtscnlHomePageData();
-      if (fetchedData) {
-        setInitialData({ ...defaultData, ...fetchedData });
-      }
-    };
-    fetchPageData();
-  }, []); // removed apiUrl from dependencies to prevent unnecessary re-renders
-
-  // Live Preview Hook connected to the Payload CMS
-  const { data } = useLivePreview({
-    serverURL: apiUrl,
-    depth: 1,
-    initialData: initialData, 
-  });
+  const { data: rawData } = useMtscnlHomePageLive();
+  const data = rawData ? { ...defaultData, ...rawData } : defaultData;
 
   return (
     <>
