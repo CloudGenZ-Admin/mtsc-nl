@@ -187,10 +187,9 @@ const About = () => {
   const resolvedHeroBg = data?.hero_background_image?.url || aboutImg;
   
   // Resolve Gallery Photos (extract from CMS array if present and valid)
-  const cmsGalleryUrls = data?.gallery_images
-    ?.map((item: any) => item.image?.url)
-    .filter(Boolean);
-  const resolvedGalleryPhotos = cmsGalleryUrls && cmsGalleryUrls.length > 0 ? cmsGalleryUrls : newPhotos;
+  const isEmpty=data?.gallery_images;
+  const cmsGalleryUrls = isEmpty ? data?.gallery_images?.map((item: any) => item.image?.url).filter(Boolean) : [] ;
+  const resolvedGalleryPhotos = isEmpty ? (cmsGalleryUrls && cmsGalleryUrls.length > 0 ? cmsGalleryUrls : newPhotos) : [];
 
   const maxIndex = Math.max(0, resolvedGalleryPhotos.length - visibleItems);
   const nextSlide = () => setCurrentIndex((prev) => (prev >= maxIndex ? 0 : prev + 1));
