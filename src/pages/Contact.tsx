@@ -47,6 +47,9 @@ const Contact = () => {
   const data = rawData ? { ...defaultData, ...rawData } : defaultData;
   const formRef = useRef<HTMLFormElement>(null);
 
+  // Resolve Images: CMS -> Local Fallback
+  const resolvedHeroBg = data?.hero_background_image?.url || contactBg;
+
   // This handles the iframe finishing its load (meaning Google received the data)
   const handleIframeLoad = () => {
     if (isSubmitting) {
@@ -68,8 +71,8 @@ const Contact = () => {
         {/* Background Image & Overlays */}
         <div className="absolute inset-0 z-0">
           <img
-            src={contactBg}
-            alt="Contact Background Placeholder"
+            src={resolvedHeroBg}
+            alt="Contact Background"
             className="w-full h-full object-cover object-center opacity-40 mix-blend-overlay"
           />
           <div className="absolute inset-0 bg-gradient-to-t from-navy-dark via-navy/60 to-transparent" />

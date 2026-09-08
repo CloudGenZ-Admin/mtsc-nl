@@ -150,12 +150,18 @@ const Index = () => {
   const { data: rawData } = useMtscnlHomePageLive();
   const data = rawData ? { ...defaultData, ...rawData } : defaultData;
 
+  // Resolve Images: Use CMS image if exists, otherwise fallback to local assets
+  const resolvedHeroBg = data?.hero_background_image?.url || seaImg2;
+  const resolvedHeroSkyline = data?.hero_skyline_image?.url || skyline;
+  const resolvedHeroMain = data?.hero_main_image?.url || heroImg3;
+  const resolvedInvolveBg = data?.get_involved_background_image?.url || waterImg;
+
   return (
     <>
       {/* ─────────── HERO ─────────── */}
       <section
         className="relative overflow-hidden bg-cover bg-center bg-no-repeat bg-white"
-        style={{ backgroundImage: `url("${seaImg2}")` }} 
+        style={{ backgroundImage: `url("${resolvedHeroBg}")` }} 
       >
         <div className="absolute inset-0 bg-white/30 backdrop-blur-[2px]" />
 
@@ -170,7 +176,7 @@ const Index = () => {
 
               <div className="relative inline-block mt-4 md:mt-0">
                 <img
-                  src={skyline}
+                  src={resolvedHeroSkyline}
                   alt="Skyline"
                   aria-hidden="true"
                   className="absolute bottom-[90%] -right-0 w-28 md:w-40 opacity-80 animate-float pointer-events-none z-0"
@@ -222,7 +228,7 @@ const Index = () => {
             <div className="lg:col-span-5 relative animate-fade-in-up" style={{ animationDelay: "0.2s" }}>
               <div className="relative rounded-2xl overflow-hidden shadow-soft aspect-[4/5] sm:aspect-[5/4] lg:aspect-[4/5]">
                 <img
-                  src={heroImg3}
+                  src={resolvedHeroMain}
                   alt="Aerial view"
                   className="absolute inset-0 h-full w-full object-cover"
                   loading="lazy"
@@ -385,7 +391,7 @@ const Index = () => {
       {/* ─────────── GET INVOLVED & DONATE SECTION ─────────── */}
       <section
         className="relative py-20 md:py-24 bg-cover bg-center bg-no-repeat bg-warm-gray"
-        style={{ backgroundImage: `url("${waterImg}")` }}
+        style={{ backgroundImage: `url("${resolvedInvolveBg}")` }}
       >
         <div className="absolute inset-0 bg-white/60 backdrop-blur-[2px]" />
 

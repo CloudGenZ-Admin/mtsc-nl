@@ -690,13 +690,19 @@ const Support = () => {
     }
   };
 
+  // Resolve Images: CMS -> Local Fallback
+  const resolvedHeroBg = data?.hero_background_image?.url || heroBg;
+  const resolvedCentreImg = data?.centre_image?.url || lounge;
+  const resolvedTransportImg = data?.transport_image?.url || transportImg;
+  const resolvedReligionImg = data?.religion_image?.url || religiousImg;
+
   return (
     <>
       {/* 1. Hero Section */}
       <section className="relative pt-28 pb-20 md:pt-36 md:pb-28 overflow-hidden bg-navy min-h-[45vh] flex items-center justify-center border-b border-navy-dark">
         <div className="absolute inset-0 z-0">
           <img 
-            src={heroBg} 
+            src={resolvedHeroBg} 
             alt="Seafarer Support Background" 
             className="w-full h-full object-cover object-center opacity-40 mix-blend-overlay" 
           />
@@ -794,7 +800,7 @@ const Support = () => {
       <section className="py-20 bg-warm-gray">
         <div className="container-page grid lg:grid-cols-2 gap-12 lg:gap-16 items-center">
           <div className="rounded-3xl overflow-hidden shadow-soft aspect-[5/4]">
-            <img src={lounge} alt="Seafarers lounge" className="h-full w-full object-cover" loading="lazy" />
+            <img src={resolvedCentreImg} alt="Seafarers lounge" className="h-full w-full object-cover" loading="lazy" />
           </div>
           <div>
             <h2 className="text-3xl md:text-4xl font-extrabold text-navy leading-tight">
@@ -852,7 +858,7 @@ const Support = () => {
             </Button>
           </div>
           <div className="order-1 lg:order-2 rounded-3xl overflow-hidden shadow-soft aspect-[5/4]">
-            <img src={transportImg} alt="Transportation Assistance" className="h-full w-full object-cover" loading="lazy" />
+            <img src={resolvedTransportImg} alt="Transportation Assistance" className="h-full w-full object-cover" loading="lazy" />
           </div>
         </div>
       </section>
@@ -880,7 +886,7 @@ const Support = () => {
       <section className="py-20 bg-white">
         <div className="container-page grid lg:grid-cols-2 gap-12 lg:gap-16 items-center">
           <div className="rounded-3xl overflow-hidden shadow-soft aspect-[5/4]">
-            <img src={religiousImg} alt="Religious Services" className="h-full w-full object-cover" loading="lazy" />
+            <img src={resolvedReligionImg} alt="Religious Services" className="h-full w-full object-cover" loading="lazy" />
           </div>
           <div>
             <h2 className="text-3xl md:text-4xl font-extrabold text-navy leading-tight">

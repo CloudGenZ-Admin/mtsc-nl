@@ -407,6 +407,10 @@ const GetInvolved = () => {
     { id: 'volunteer', icon: Users, title: data.ways_cards[2]?.title || "Volunteer", desc: data.ways_cards[2]?.desc || "Share your time & skills" },
   ];
 
+  // Resolve Images: CMS -> Local Fallback
+  const resolvedHeroBg = data?.hero_background_image?.url || getInvolvedBg;
+  const resolvedWaysBg = data?.ways_background_image?.url || maritimeImage;
+
   const handleDonateClick = (e?: React.MouseEvent) => {
     if (e) e.preventDefault();
     setIsDonateActive(true);
@@ -451,7 +455,7 @@ const GetInvolved = () => {
       <section className="relative pt-28 pb-20 md:pt-36 md:pb-28 overflow-hidden bg-navy min-h-[45vh] flex items-center justify-center">
         <div className="absolute inset-0 z-0">
           <img 
-            src={getInvolvedBg} 
+            src={resolvedHeroBg} 
             alt="Get Involved Background" 
             className="w-full h-full object-cover object-center opacity-40 mix-blend-overlay" 
           />
@@ -568,7 +572,7 @@ const GetInvolved = () => {
       <section id="ways-to-help" className="relative py-20 md:py-28 scroll-mt-24 overflow-hidden">
         <div className="absolute inset-0 z-0 ">
           <img 
-            src={maritimeImage} 
+            src={resolvedWaysBg} 
             alt="Ways to help background" 
             className="w-full h-full object-cover object-center " 
           />

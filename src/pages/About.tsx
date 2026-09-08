@@ -183,7 +183,16 @@ const About = () => {
     return () => window.removeEventListener("resize", handleResize);
   }, []);
 
-  const maxIndex = Math.max(0, newPhotos.length - visibleItems);
+  // Resolve Images: CMS -> Local Fallback
+  const resolvedHeroBg = data?.hero_background_image?.url || aboutImg;
+  
+  // Resolve Gallery Photos (extract from CMS array if present and valid)
+  const cmsGalleryUrls = data?.gallery_images
+    ?.map((item: any) => item.image?.url)
+    .filter(Boolean);
+  const resolvedGalleryPhotos = cmsGalleryUrls && cmsGalleryUrls.length > 0 ? cmsGalleryUrls : newPhotos;
+
+  const maxIndex = Math.max(0, resolvedGalleryPhotos.length - visibleItems);
   const nextSlide = () => setCurrentIndex((prev) => (prev >= maxIndex ? 0 : prev + 1));
   const prevSlide = () => setCurrentIndex((prev) => (prev === 0 ? maxIndex : prev - 1));
 
@@ -193,7 +202,7 @@ const About = () => {
       <section className="relative pt-28 pb-20 md:pt-36 md:pb-28 overflow-hidden bg-navy-dark min-h-[45vh] flex items-center justify-center border-b border-navy-dark">
         <div className="absolute inset-0 z-0">
           <img 
-            src={aboutImg} 
+            src={resolvedHeroBg} 
             alt="Port of St. John's" 
             className="w-full h-full object-cover object-center opacity-60 mix-blend-overlay" 
           />
@@ -222,45 +231,49 @@ const About = () => {
             {/* Vertical connecting line for desktop */}
             <div className="hidden md:block absolute left-1/2 top-4 bottom-4 w-[2px] bg-coral/20 -translate-x-1/2"></div>
 
-            {data.history_blocks.map((block: any, idx: number) => (
-              <div key={idx} className={`relative flex flex-col md:flex-row items-center gap-10 md:gap-16 lg:gap-24 ${idx % 2 !== 0 ? 'md:flex-row-reverse' : ''}`}>
-                
-                {/* Timeline Center Dot */}
-                <div className="hidden md:flex absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-12 h-12 rounded-full bg-white border-4 border-coral items-center justify-center z-10 shadow-md">
-                  <div className="w-3 h-3 bg-coral rounded-full"></div>
-                </div>
+            {data.history_blocks.map((block: any, idx: number) => {
+              const resolvedBlockImg = block.image?.url || historyStaticImages[idx] || historyImg3;
 
-                {/* Image Side */}
-                <div className="w-full md:w-1/2 relative group">
-                  <div className="aspect-[4/3] rounded-3xl overflow-hidden shadow-card group-hover:shadow-card-hover transition-all duration-500 border-4 border-white">
-                    <img 
-                      src={historyStaticImages[idx] || historyImg3} 
-                      alt={block.title} 
-                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" 
-                    />
+              return (
+                <div key={idx} className={`relative flex flex-col md:flex-row items-center gap-10 md:gap-16 lg:gap-24 ${idx % 2 !== 0 ? 'md:flex-row-reverse' : ''}`}>
+                  
+                  {/* Timeline Center Dot */}
+                  <div className="hidden md:flex absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-12 h-12 rounded-full bg-white border-4 border-coral items-center justify-center z-10 shadow-md">
+                    <div className="w-3 h-3 bg-coral rounded-full"></div>
                   </div>
-                  {/* Year Badge overlay on desktop */}
-                  <div className={`absolute top-8 ${idx % 2 !== 0 ? '-left-8' : '-right-8'} bg-navy text-white px-8 py-3 rounded-xl shadow-xl z-20 hidden md:block transform transition-transform group-hover:-translate-y-2`}>
-                    <span className="text-xl font-bold tracking-wider">{block.era}</span>
-                  </div>
-                </div>
 
-                {/* Content Side */}
-                <div className="w-full md:w-1/2 space-y-6 bg-white md:bg-transparent p-8 md:p-0 rounded-3xl shadow-sm md:shadow-none border md:border-none border-border relative z-10">
-                  {/* Year Badge for mobile */}
-                  <div className="md:hidden inline-block bg-coral text-white px-4 py-2 rounded-lg text-sm font-bold mb-2">
-                    {block.era}
+                  {/* Image Side */}
+                  <div className="w-full md:w-1/2 relative group">
+                    <div className="aspect-[4/3] rounded-3xl overflow-hidden shadow-card group-hover:shadow-card-hover transition-all duration-500 border-4 border-white">
+                      <img 
+                        src={resolvedBlockImg} 
+                        alt={block.title} 
+                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" 
+                      />
+                    </div>
+                    {/* Year Badge overlay on desktop */}
+                    <div className={`absolute top-8 ${idx % 2 !== 0 ? '-left-8' : '-right-8'} bg-navy text-white px-8 py-3 rounded-xl shadow-xl z-20 hidden md:block transform transition-transform group-hover:-translate-y-2`}>
+                      <span className="text-xl font-bold tracking-wider">{block.era}</span>
+                    </div>
                   </div>
-                  
-                  <h3 className="text-2xl md:text-3xl font-extrabold text-navy">{block.title}</h3>
-                  
-                  <div className="text-text-mid text-lg leading-relaxed space-y-4 font-medium">
-                    <p>{block.paragraph_1}</p>
-                    {block.paragraph_2 && <p className="mt-4">{block.paragraph_2}</p>}
+
+                  {/* Content Side */}
+                  <div className="w-full md:w-1/2 space-y-6 bg-white md:bg-transparent p-8 md:p-0 rounded-3xl shadow-sm md:shadow-none border md:border-none border-border relative z-10">
+                    {/* Year Badge for mobile */}
+                    <div className="md:hidden inline-block bg-coral text-white px-4 py-2 rounded-lg text-sm font-bold mb-2">
+                      {block.era}
+                    </div>
+                    
+                    <h3 className="text-2xl md:text-3xl font-extrabold text-navy">{block.title}</h3>
+                    
+                    <div className="text-text-mid text-lg leading-relaxed space-y-4 font-medium">
+                      <p>{block.paragraph_1}</p>
+                      {block.paragraph_2 && <p className="mt-4">{block.paragraph_2}</p>}
+                    </div>
                   </div>
                 </div>
-              </div>
-            ))}
+              );
+            })}
           </div>
         </div>
       </section>
@@ -276,29 +289,33 @@ const About = () => {
           </div>
 
           <div className="space-y-12 md:space-y-16">
-            {data.team_members.map((member: any, idx: number) => (
-              <div key={idx} className="grid lg:grid-cols-12 gap-10 md:gap-12 items-center bg-warm-gray p-8 md:p-12 rounded-3xl shadow-sm">
-                <div className="lg:col-span-5">
-                  <img 
-                    src={teamStaticImages[idx] || aliciaImg} 
-                    alt={member.name} 
-                    className="w-full rounded-2xl shadow-soft object-cover aspect-[4/5]"
-                  />
-                </div>
-                <div className="lg:col-span-7">
-                  <h2 className="text-2xl md:text-3xl font-extrabold text-navy leading-tight">
-                    {member.name}
-                  </h2>
-                  <h3 className="mt-4 text-lg font-bold text-coral uppercase tracking-wider">
-                    {member.role}
-                  </h3>
-                  <div className="mt-6 space-y-4 text-base md:text-lg text-text-mid leading-relaxed">
-                    <p>{member.bio_p1}</p>
-                    {member.bio_p2 && <p className="mt-4">{member.bio_p2}</p>}
+            {data.team_members.map((member: any, idx: number) => {
+              const resolvedTeamImg = member.image?.url || teamStaticImages[idx] || aliciaImg;
+
+              return (
+                <div key={idx} className="grid lg:grid-cols-12 gap-10 md:gap-12 items-center bg-warm-gray p-8 md:p-12 rounded-3xl shadow-sm">
+                  <div className="lg:col-span-5">
+                    <img 
+                      src={resolvedTeamImg} 
+                      alt={member.name} 
+                      className="w-full rounded-2xl shadow-soft object-cover aspect-[4/5]"
+                    />
+                  </div>
+                  <div className="lg:col-span-7">
+                    <h2 className="text-2xl md:text-3xl font-extrabold text-navy leading-tight">
+                      {member.name}
+                    </h2>
+                    <h3 className="mt-4 text-lg font-bold text-coral uppercase tracking-wider">
+                      {member.role}
+                    </h3>
+                    <div className="mt-6 space-y-4 text-base md:text-lg text-text-mid leading-relaxed">
+                      <p>{member.bio_p1}</p>
+                      {member.bio_p2 && <p className="mt-4">{member.bio_p2}</p>}
+                    </div>
                   </div>
                 </div>
-              </div>
-            ))}
+              );
+            })}
           </div>
         </div>
       </section>
@@ -357,7 +374,7 @@ const About = () => {
                 className="flex transition-transform duration-500 ease-in-out"
                 style={{ transform: `translateX(-${currentIndex * (100 / visibleItems)}%)` }}
               >
-                {newPhotos.map((photo, i) => (
+                {resolvedGalleryPhotos.map((photo: string, i: number) => (
                   <div key={i} className="shrink-0 p-2" style={{ width: `${100 / visibleItems}%` }}>
                     <div className="aspect-[4/3] rounded-2xl overflow-hidden shadow-sm border border-border bg-white group">
                       <img 

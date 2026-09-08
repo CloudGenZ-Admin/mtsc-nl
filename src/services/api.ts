@@ -110,6 +110,24 @@ export async function getMtscnlGetInvolvedPageData() {
 }
 
 /**
+ * Fetch MTSC NL DonatePage Global data from Payload CMS
+ */
+export async function getMtscnlDonatePageData() {
+  try {
+    const res = await fetch(`${CMS_URL}/api/globals/mtscnl-donate-page?depth=2&_t=${Date.now()}`);
+    if (!res.ok) {
+      throw new Error(`Failed to fetch donate page data: ${res.statusText}`);
+    }
+    const data = await res.json();
+    populateMediaCache(data);
+    return data;
+  } catch (error) {
+    console.error('Error fetching Mtscnl DonatePage data from Payload CMS:', error);
+    return null;
+  }
+}
+
+/**
  * Extracts YouTube Video ID from any full YouTube URL or raw ID
  */
 export function getYouTubeVideoId(urlOrId) {
